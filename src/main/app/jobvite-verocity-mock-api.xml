@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:context="http://www.springframework.org/schema/context"
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
 	xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
@@ -10,23 +10,26 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
 
-<!-- 	<http:listener-config name="tempworks-bgcheck-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" protocol="HTTP">
-        <tls:context>
+	<http:listener-config name="tempworks-bgcheck-httpListenerConfig" host="0.0.0.0" port="8083" doc:name="HTTP Listener Configuration" >
+       <!--  <tls:context>
             <tls:trust-store  password="${jks.trust.store.password}" type="${jks.trust.key.password}"/>
             <tls:key-store keyPassword="${jks.trust.store.password}" password="${jks.trust.key.password}" path="${jks.path}"/>
-        </tls:context>
-	</http:listener-config> -->
+        </tls:context> -->
+	</http:listener-config>
 
 	
 	<context:property-placeholder
 		location="classpath:/config/verocity-mock-${mule.env}.properties" />
 
-    <flow name="verocity-mock-apiFlow">
-        <http:listener config-ref="tempworks-bgcheck-httpListenerConfig" path="/verocity/backgroundcheck" doc:name="HTTP"/>
+    <flow name="jobvite-verocity-mock-apiFlow">
+        <http:listener config-ref="tempworks-bgcheck-httpListenerConfig" path="integrations/orders" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <logger message="Request Payload received to Verocity API:  #[payload]  Received Request Headers: #[message.inboundProperties.toString()]" level="INFO" doc:name="Logger"/>
-        <set-payload value="{  &quot;OrderResponse&quot;: {   &quot;orderId&quot;: 1234,   &quot;reportId&quot;: 5678,   &quot;status&quot;: &quot;Created&quot;  } }" mimeType="application/json" doc:name="Set Payload"/>
+        <set-payload  mimeType="application/json" doc:name="Set Payload" value="{
+&quot;status&quot;:&quot;success&quot;
+}"/>
     </flow>
 </mule>
